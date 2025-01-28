@@ -1,0 +1,53 @@
+.ticket-title {
+	font-weight:bold;
+	font-size:20px;
+	margin-left:10px;
+}
+.answered {
+	font-size:10px;
+	color:#ffffff;
+	background-color:#7079d6;
+	margin:0px 0px 0px 5px;
+}
+.panel-heading.right p {
+    margin: 5px 0;  /* Adjust the spacing between lines */
+    line-height: 1.5;  /* Adjust the line height */
+}
+
+.panel-heading.right span.glyphicon {
+    margin-right: 10px;  /* Space between icon and text */
+    width: 20px;  /* Consistent width for icons */
+    display: inline-block;
+}
+
+/* Ticket Information Styles */
+.ticket-info {
+    margin-bottom: 20px;
+}
+
+.info-row {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.info-row:last-child {
+    margin-bottom: 0;
+}
+
+.info-item {
+    flex: 1;
+    padding-right: 20px;
+}
+
+.info-item strong {
+    display: inline-block;
+    min-width: 100px;
+}
+
+.info-item:last-child {
+    padding-right: 0;
+}
+
+.comment-date {
+    color: #666;
+}
