@@ -52,16 +52,6 @@
                         <i class="fas fa-chevron-down"></i>
                     </a>
                     <ul class="dropdown-menu">
-                        <li>
-                            <a href="profile.php">
-                                <i class="fas fa-user"></i> Profile
-                            </a>
-                        </li>
-                        <li>
-                            <a href="settings.php">
-                                <i class="fas fa-cog"></i> Settings
-                            </a>
-                        </li>
                         <li class="divider"></li>
                         <li>
                             <a href="logout.php">
