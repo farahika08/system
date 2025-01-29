@@ -79,8 +79,6 @@ $(document).ready(function() {
                     $('#subject').val(data.title);
                     $('#message').val(data.init_msg);
                     $('#payment').val(data.payment);
-                    $('#client_name').val(data.client_name);
-                    $('#client_phone').val(data.client_phone);
                     if(data.priority == '0') {
                         $('#normal').prop("checked", true);
                     } else if(data.priority == '1') {
@@ -114,22 +112,5 @@ $(document).ready(function() {
                 return false;
             }
         });    
-
-        $(document).on('click', '.deleteTicket', function(){
-            var ticketId = $(this).attr("id");
-            var action = "deleteTicket";
-            if(confirm("Are you sure you want to delete this ticket?")) {
-                $.ajax({
-                    url:"ticket_action.php",
-                    method:"POST",
-                    data:{id:ticketId, action:action},
-                    success:function(data) {
-                        ticketData.ajax.reload();
-                    }
-                });
-            } else {
-                return false;
-            }
-        });
     }
 });

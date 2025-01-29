@@ -30,7 +30,8 @@ class Tickets extends Database
         $sqlQuery = "
     SELECT t.id, t.uniqid, t.title, t.init_msg AS message, t.date, t.last_reply, 
            t.resolved, u.name AS creater, d.name AS department, u.user_type, 
-           t.user, t.user_read, t.admin_read, t.branch, t.priority
+           t.user, t.user_read, t.admin_read, t.branch, t.priority,
+           t.payment, t.client_name, t.client_phone
     FROM hd_tickets t
     LEFT JOIN hd_users u ON t.user = u.id
     LEFT JOIN hd_departments d ON t.department = d.id
@@ -62,18 +63,11 @@ class Tickets extends Database
                 '<span class="label label-success">Open</span>' : 
                 '<span class="label label-danger">Closed</span>';
 
-            // Format branch with color labels
-            $branchLabel = '';
-            switch($ticket['branch']) {
-                case 'Panji':
-                    $branchLabel = '<span class="label label-primary">Panji</span>';
-                    break;
-                case 'KTCC':
-                    $branchLabel = '<span class="label label-info">KTCC</span>';
-                    break;
-                default:
-                    $branchLabel = '<span class="label label-default">' . htmlspecialchars($ticket['branch']) . '</span>';
-            }
+            // Format the creation date
+            date_default_timezone_set('Asia/Kuala_Lumpur');
+            $dateFormatted = date('d-m-Y', $ticket['date']);
+            $timeFormatted = date('h:i:s A', $ticket['date']);
+            $createdFormatted = $dateFormatted . '<br>' . $timeFormatted; // Combine date and time
 
             $title = $ticket['title'];
             if (
@@ -82,22 +76,17 @@ class Tickets extends Database
                 $title = $this->getRepliedTitle($ticket['title']);
             }
 
-            date_default_timezone_set('Asia/Kuala_Lumpur');
-            $dateFormatted = date('d-m-Y', $ticket['date']);
-            $timeFormatted = date('h:i:s A', $ticket['date']);
-
             $ticketRows[] = $ticket['id'];
             $ticketRows[] = $ticket['uniqid'];
             $ticketRows[] = $title;
             $ticketRows[] = $ticket['department'];
             $ticketRows[] = $ticket['creater'];
-            $ticketRows[] = $dateFormatted . '<br>' . $timeFormatted;
+            $ticketRows[] = $createdFormatted; // Use the formatted date
             $ticketRows[] = $status;
             $ticketRows[] = '<a href="view_ticket.php?id=' . $ticket["uniqid"] . '" class="btn btn-success btn-xs update">View Ticket</a>';
             $ticketRows[] = '<button type="button" name="update" id="' . $ticket["id"] . '" class="btn btn-warning btn-xs update">Edit</button>'; 
             $ticketRows[] = '<button type="button" name="delete" id="' . $ticket["id"] . '" class="btn btn-danger btn-xs delete">Close</button>';
             $ticketRows[] = '<button type="button" name="deleteTicket" id="' . $ticket["id"] . '" class="btn btn-danger btn-xs deleteTicket">Delete</button>';
-            $ticketRows[] = $branchLabel;
             $ticketData[] = $ticketRows;
         }
 
@@ -188,10 +177,10 @@ class Tickets extends Database
     {
         if ($_POST['ticketId']) {
             $updateQuery = "UPDATE " . $this->ticketTable . " 
-    SET title = ?, department = ?, init_msg = ?, resolved = ?, branch = ?, 
-        priority = ?, payment = ?, client_name = ?, client_phone = ?
-    WHERE id = ?";
-                
+            SET title = ?, department = ?, init_msg = ?, resolved = ?, branch = ?, 
+                priority = ?, payment = ?, client_name = ?, client_phone = ?
+            WHERE id = ?";
+                    
             $stmt = $this->dbConnect->prepare($updateQuery);
             $stmt->bind_param('sisisssss', 
                 $_POST["subject"],
