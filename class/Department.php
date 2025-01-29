@@ -2,7 +2,7 @@
 
 class Department extends Database {  
     
-	private $departmentsTable = 'hd_departments';
+	private $departmentsTable = 'hd_category';
 	
 	private $dbConnect = false;
 	public function __construct(){		

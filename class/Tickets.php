@@ -4,7 +4,7 @@ class Tickets extends Database
 {
     private $ticketTable = 'hd_tickets';
     private $ticketRepliesTable = 'hd_ticket_replies';
-    private $departmentsTable = 'hd_departments';
+    private $departmentsTable = 'hd_category';
     private $dbConnect = false;
 
     public function __construct()
@@ -33,7 +33,7 @@ class Tickets extends Database
            t.user, t.user_read, t.admin_read, t.branch, t.priority
     FROM hd_tickets t
     LEFT JOIN hd_users u ON t.user = u.id
-    LEFT JOIN hd_departments d ON t.department = d.id
+    LEFT JOIN hd_category d ON t.department = d.id
     $sqlWhere
 ";
 
@@ -272,7 +272,7 @@ class Tickets extends Database
             SELECT t.*, u.name as customer_name, d.name as department_name 
             FROM " . $this->ticketTable . " t 
             LEFT JOIN hd_users u ON t.user = u.id 
-            LEFT JOIN hd_departments d ON t.department = d.id 
+            LEFT JOIN hd_category d ON t.department = d.id 
             WHERE t.id = ?");
         $stmt->bind_param('i', $ticketId);
         $stmt->execute();
@@ -298,7 +298,7 @@ class Tickets extends Database
                 u.name as creater, d.name as department 
             FROM " . $this->ticketTable . " t 
             LEFT JOIN hd_users u ON t.user = u.id 
-            LEFT JOIN hd_departments d ON t.department = d.id 
+            LEFT JOIN hd_category d ON t.department = d.id 
             WHERE t.uniqid = ?");
         $stmt->bind_param('s', $id);
         $stmt->execute();
@@ -341,7 +341,7 @@ class Tickets extends Database
             FROM " . $this->ticketRepliesTable . " r
             LEFT JOIN " . $this->ticketTable . " t ON r.ticket_id = t.id
             LEFT JOIN hd_users u ON r.user = u.id 
-            LEFT JOIN hd_departments d ON t.department = d.id 
+            LEFT JOIN hd_category d ON t.department = d.id 
             WHERE r.ticket_id = ?");
         $stmt->bind_param('i', $id);
         $stmt->execute();
