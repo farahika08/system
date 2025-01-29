@@ -65,7 +65,7 @@ $(document).ready(function() {
             });
         });            
 
-        $(document).on('click', '.update', function(){
+        /*$(document).on('click', '.update', function(){
             var ticketId = $(this).attr("id");
             var action = 'getTicketDetails';
             $.ajax({
@@ -79,6 +79,8 @@ $(document).ready(function() {
                     $('#subject').val(data.title);
                     $('#message').val(data.init_msg);
                     $('#payment').val(data.payment);
+                    $('#client_name').val(data.client_name);
+                    $('#client_phone').val(data.client_phone);
                     if(data.priority == '0') {
                         $('#normal').prop("checked", true);
                     } else if(data.priority == '1') {
@@ -94,7 +96,53 @@ $(document).ready(function() {
                     $('#save').val('Save Ticket');
                 }
             });
-        });           
+        });          */
+        $(document).on('click', '.update', function() {
+            var ticketId = $(this).attr("id");
+            var action = 'getTicketDetails';
+            $.ajax({
+                url: 'ticket_action.php',
+                method: "POST",
+                data: { ticketId: ticketId, action: action },
+                dataType: "json",
+                success: function(data) {
+                    if(data) { // Ensure data is not empty or undefined
+                        $('#ticketModal').modal('show');
+                        $('#ticketId').val(data.id);
+                        $('#subject').val(data.title);
+                        $('#message').val(data.init_msg);
+                        $('#payment').val(data.payment);
+                        $('#client_name').val(data.client_name);
+                        $('#client_phone').val(data.client_phone);
+        
+                        // Priority checkboxes
+                        if (data.priority == '0') {
+                            $('#normal').prop("checked", true);
+                        } else if (data.priority == '1') {
+                            $('#high').prop("checked", true);
+                        }
+        
+                        // Gender/Status checkboxes
+                        if (data.resolved == '0') {
+                            $('#open').prop("checked", true);
+                        } else if (data.resolved == '1') {
+                            $('#close').prop("checked", true);
+                        }
+        
+                        $('.modal-title').html("<i class='fa fa-plus'></i> Edit Ticket");
+                        $('#action').val('updateTicket');
+                        $('#save').val('Save Ticket');
+                    } else {
+                        alert("Ticket data not found or error occurred");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Error: " + error);
+                    alert("There was an error retrieving the ticket details.");
+                }
+            });
+        });
+         
 
         $(document).on('click', '.delete', function(){
             var ticketId = $(this).attr("id");        
@@ -112,5 +160,22 @@ $(document).ready(function() {
                 return false;
             }
         });    
+
+        $(document).on('click', '.deleteTicket', function(){
+            var ticketId = $(this).attr("id");
+            var action = "deleteTicket";
+            if(confirm("Are you sure you want to delete this ticket?")) {
+                $.ajax({
+                    url:"ticket_action.php",
+                    method:"POST",
+                    data:{id:ticketId, action:action},
+                    success:function(data) {
+                        ticketData.ajax.reload();
+                    }
+                });
+            } else {
+                return false;
+            }
+        });
     }
 });

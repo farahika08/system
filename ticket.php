@@ -46,11 +46,9 @@ $user = $users->getUserInfo();
 					<th>Edit</th>
 					<th>Close</th>
 					<th>Delete</th>			
+					<th>Branch</th>	
 				</tr>
 			</thead>
-			<tbody>
-				<!-- Existing rows will be populated here -->
-			</tbody>
 		</table>
 	</div>
 	<?php include('add_ticket_model.php'); ?>

@@ -4,10 +4,9 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title"><i class='fa fa-plus'></i> <span id="modalTitle">Create Ticket</span></h4>
+					<h4 class="modal-title"><i class="fa fa-plus"></i> Add Ticket</h4>
 				</div>
 				<div class="modal-body">
-					<input type="hidden" name="ticketId" id="ticketId" />
 					<div class="form-group">
 						<label for="client_name" class="control-label">Client Name</label>
 						<input type="text" class="form-control" id="client_name" name="client_name" placeholder="Enter client name" required>
@@ -16,7 +15,7 @@
 						<label for="client_phone" class="control-label">Client Phone</label>
 						<input type="text" class="form-control" id="client_phone" name="client_phone" placeholder="Enter client phone number" required>
 					</div>
-					<div class="form-group">
+					<div class="form-group"
 						<label for="subject" class="control-label">Subject</label>
 						<input type="text" class="form-control" id="subject" name="subject" placeholder="Subject" required>			
 					</div>
@@ -40,7 +39,9 @@
 						<select id="status" name="status" class="form-control" required>
 						<option value="0"></option>	
 						<option value="0">Open</option>
-							<option value="1">Close</option>
+							<?php if(isset($_SESSION["admin"])) { ?>
+								<option value="1">Close</option>
+							<?php } ?>
 						</select>
 					</div>
 					<div class="form-group">
@@ -56,12 +57,13 @@
 						<textarea class="form-control" rows="5" id="message" name="message"></textarea>							
 					</div>	
 					<div class="form-group">
-						<label for="payment" class="control-label">Payment (RM)</label>
-						<input type="number" step="0.01" class="form-control" id="payment" name="payment" placeholder="Enter payment amount" required>
-					</div>
+    <label for="payment" class="control-label">Payment (RM)</label>
+    <input type="number" step="0.01" class="form-control" id="payment" name="payment" placeholder="Enter payment amount" required>
+</div>
 				</div>
 				<div class="modal-footer">
-					<input type="hidden" name="action" id="action" value="updateTicket" />
+					<input type="hidden" name="ticketId" id="ticketId" />
+					<input type="hidden" name="action" id="action" value="" />
 					<input type="submit" name="save" id="save" class="btn btn-info" value="Save" />
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>

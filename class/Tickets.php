@@ -30,8 +30,7 @@ class Tickets extends Database
         $sqlQuery = "
     SELECT t.id, t.uniqid, t.title, t.init_msg AS message, t.date, t.last_reply, 
            t.resolved, u.name AS creater, d.name AS department, u.user_type, 
-           t.user, t.user_read, t.admin_read, t.branch, t.priority,
-           t.payment, t.client_name, t.client_phone
+           t.user, t.user_read, t.admin_read, t.branch, t.priority
     FROM hd_tickets t
     LEFT JOIN hd_users u ON t.user = u.id
     LEFT JOIN hd_departments d ON t.department = d.id
@@ -63,11 +62,18 @@ class Tickets extends Database
                 '<span class="label label-success">Open</span>' : 
                 '<span class="label label-danger">Closed</span>';
 
-            // Format the creation date
-            date_default_timezone_set('Asia/Kuala_Lumpur');
-            $dateFormatted = date('d-m-Y', $ticket['date']);
-            $timeFormatted = date('h:i:s A', $ticket['date']);
-            $createdFormatted = $dateFormatted . '<br>' . $timeFormatted; // Combine date and time
+            // Format branch with color labels
+            $branchLabel = '';
+            switch($ticket['branch']) {
+                case 'Panji':
+                    $branchLabel = '<span class="label label-primary">Panji</span>';
+                    break;
+                case 'KTCC':
+                    $branchLabel = '<span class="label label-info">KTCC</span>';
+                    break;
+                default:
+                    $branchLabel = '<span class="label label-default">' . htmlspecialchars($ticket['branch']) . '</span>';
+            }
 
             $title = $ticket['title'];
             if (
@@ -76,17 +82,24 @@ class Tickets extends Database
                 $title = $this->getRepliedTitle($ticket['title']);
             }
 
+            date_default_timezone_set('Asia/Kuala_Lumpur');
+            $dateFormatted = date('d-m-Y', $ticket['date']);
+            $timeFormatted = date('h:i:s A', $ticket['date']);
+
             $ticketRows[] = $ticket['id'];
             $ticketRows[] = $ticket['uniqid'];
             $ticketRows[] = $title;
             $ticketRows[] = $ticket['department'];
             $ticketRows[] = $ticket['creater'];
-            $ticketRows[] = $createdFormatted; // Use the formatted date
+            $ticketRows[] = $dateFormatted . '<br>' . $timeFormatted;
             $ticketRows[] = $status;
             $ticketRows[] = '<a href="view_ticket.php?id=' . $ticket["uniqid"] . '" class="btn btn-success btn-xs update">View Ticket</a>';
             $ticketRows[] = '<button type="button" name="update" id="' . $ticket["id"] . '" class="btn btn-warning btn-xs update">Edit</button>'; 
+       
+        
             $ticketRows[] = '<button type="button" name="delete" id="' . $ticket["id"] . '" class="btn btn-danger btn-xs delete">Close</button>';
             $ticketRows[] = '<button type="button" name="deleteTicket" id="' . $ticket["id"] . '" class="btn btn-danger btn-xs deleteTicket">Delete</button>';
+            $ticketRows[] = $branchLabel;
             $ticketData[] = $ticketRows;
         }
 
@@ -173,14 +186,14 @@ class Tickets extends Database
         }
     }
 
-    public function updateTicket()
+    /*public function updateTicket()
     {
         if ($_POST['ticketId']) {
             $updateQuery = "UPDATE " . $this->ticketTable . " 
-            SET title = ?, department = ?, init_msg = ?, resolved = ?, branch = ?, 
-                priority = ?, payment = ?, client_name = ?, client_phone = ?
-            WHERE id = ?";
-                    
+    SET title = ?, department = ?, init_msg = ?, resolved = ?, branch = ?, 
+        priority = ?, payment = ?, client_name = ?, client_phone = ?
+    WHERE id = ?";
+                
             $stmt = $this->dbConnect->prepare($updateQuery);
             $stmt->bind_param('sisisssss', 
                 $_POST["subject"],
@@ -198,7 +211,46 @@ class Tickets extends Database
             return $stmt->execute();
         }
         return false;
+    }*/
+
+    public function updateTicket()
+{
+    if (isset($_POST['ticketId'])) {
+        // Log incoming POST data for debugging
+        error_log("POST Data: " . print_r($_POST, true));
+
+        // Prepare the update query
+        $updateQuery = "UPDATE " . $this->ticketTable . " 
+                        SET title = ?, department = ?, init_msg = ?, resolved = ?, branch = ?, 
+                            priority = ?, payment = ?, client_name = ?, client_phone = ?
+                        WHERE id = ?";
+        
+        // Prepare and bind parameters
+        $stmt = $this->dbConnect->prepare($updateQuery);
+        $stmt->bind_param('sisissssss', 
+            $_POST["subject"],
+            $_POST["department"],
+            $_POST["message"],
+            $_POST["status"],
+            $_POST["branch"],
+            $_POST["priority"],
+            $_POST["payment"],
+            $_POST["client_name"],
+            $_POST["client_phone"],
+            $_POST["ticketId"]
+        );
+
+        // Execute the query and check if successful
+        if ($stmt->execute()) {
+            echo json_encode(["status" => "success", "message" => "Ticket updated successfully"]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Error updating ticket: " . $stmt->error]);
+        }
+    } else {
+        echo json_encode(["status" => "error", "message" => "Ticket ID is missing"]);
     }
+}
+
 
     public function closeTicket()
     {
