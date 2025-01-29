@@ -170,7 +170,7 @@ $user = $users->getUserInfo();
 
                 <tr>
 
-                    <th>S/N</th>
+                    <th>No</th>
 
                     <th>Ticket ID</th>
 
