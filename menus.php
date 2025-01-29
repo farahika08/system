@@ -1,7 +1,6 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css"> <!-- Link to the external CSS file -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
@@ -55,11 +54,9 @@
 </head>
 <body>
 	
-	<nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid">
-        
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="nav navbar-nav menus">
+	<nav class="navbar navbar-inverse" style="background: #253d5c; color: #f6f8f9; font-weight: bold;">
+    <div class="container-fluid">
+    <ul class="nav navbar-nav menus">
                     <li id="ticket" class="nav-item">
                         <a href="ticket.php" class="nav-link"><i class="fas fa-ticket-alt"></i> Ticket</a>
                     </li>
@@ -75,22 +72,17 @@
                         </li>
                     <?php endif; ?>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown nav-item">
-                        <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                            <span class="label label-pill label-danger count"></span>
-                            <img src="//gravatar.com/avatar/<?php echo md5($user['email']); ?>?s=100" class="user-avatar" width="30" alt="User  Avatar"> 
-                            <?php echo isset($_SESSION["userid"]) ? $user['name'] : ''; ?>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="logout.php" class="dropdown-item">Logout</a></li>
-                        </ul>
-                    </li>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="label label-pill label-danger count"></span>
+                    <img src="//gravatar.com/avatar/<?php echo md5($user['email']); ?>?s=100" width="20" alt="User Avatar">&nbsp; 
+                    <?php echo isset($_SESSION["userid"]) ? $user['name'] : ''; ?>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="logout.php">Logout</a></li>
                 </ul>
-            </div>
-        </div>
-    </nav>
-
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</body>
-</html>
+            </li>
+        </ul>
+    </div>
+</nav>
